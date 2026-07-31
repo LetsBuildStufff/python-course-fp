@@ -2,9 +2,11 @@
   "name": "Python 3.14 Development",
   "image": "mcr.microsoft.com/devcontainers/python:dev-3.14",
 
-  "features": {
-    "ghcr.io/devcontainers-extra/features/uv:1": {}
-  },
+  // 1. Remove the extra feature that hits GitHub API
+  "features": {},
+
+  // 2. Install uv reliably during container post-create
+  "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && if [ -f pyproject.toml ]; then ~/.local/bin/uv sync; fi",
 
   "customizations": {
     "vscode": {
@@ -17,12 +19,9 @@
         "ms-vsliveshare.vsliveshare"
       ],
       "settings": {
-        // Language server & Type checking
         "python.languageServer": "Pylance",
         "python.analysis.typeCheckingMode": "basic",
         "python.analysis.autoImportCompletions": true,
-
-        // Auto-formatting and linting via Ruff
         "[python]": {
           "editor.defaultFormatter": "charliermarsh.ruff",
           "editor.formatOnSave": true,
@@ -30,20 +29,15 @@
             "source.organizeImports": "explicit"
           }
         },
-
-        // Point VS Code to uv's virtual environment
         "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
       }
     }
   },
 
-  // Automatically sync dependencies if pyproject.toml exists on container creation
-  "postCreateCommand": "if [ -f pyproject.toml ]; then uv sync; fi",
-
-  // Useful environment defaults
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
-    "UV_LINK_MODE": "copy"
+    "UV_LINK_MODE": "copy",
+    "PATH": "/home/vscode/.local/bin:${env:PATH}"
   },
 
   "remoteUser": "vscode"
