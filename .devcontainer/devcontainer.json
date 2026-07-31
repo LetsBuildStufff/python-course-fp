@@ -2,10 +2,6 @@
   "name": "Python 3.14 Development",
   "image": "mcr.microsoft.com/devcontainers/python:dev-3.14",
 
-  // 1. Remove the extra feature that hits GitHub API
-  "features": {},
-
-  // 2. Install uv reliably during container post-create
   "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && if [ -f pyproject.toml ]; then ~/.local/bin/uv sync; fi",
 
   "customizations": {
